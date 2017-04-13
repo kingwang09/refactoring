@@ -2,6 +2,8 @@ package org.pilot.refact.step01;
 
 import java.util.Vector;
 
+import org.pilot.refact.step01.movie.Movie;
+
 import lombok.Getter;
 
 public class Customer {
@@ -23,56 +25,29 @@ public class Customer {
 	public String getStatements(){
 		StringBuilder result = new StringBuilder();
 		result.append(name).append(" 고객님의 대여기록\n");
-		
-		double totalAmount = 0;
-		int rentalPoints = 0;
 		for(Rental rental : rentals){
-			double amount = 0;
-			
-			amount = getTotalAmount(rental);
-			
-			//적립포인트 1
-			rentalPoints = getPoint(rental);
-			
+			int rentDay = rental.getDayRent();
 			result.append("\t").append(rental.getMovie().getTitle()).append("\t")
-				  .append(amount).append("\n");
-			totalAmount += amount;
+				  .append(rental.getMovie().getPrice(rentDay)).append("\n");
 		}
-		result.append("누적 대여료 : ").append(totalAmount).append("\n")
-			.append("적립 포인트 : ").append(rentalPoints);
+		result.append("누적 대여료 : ").append(getTotalAmount()).append("\n")
+			  .append("적립 포인트 : ").append(getTotalPoint());
 		return result.toString();
 	}
 	
 	//대여로 계산
-	private double getTotalAmount(Rental rental){
+	private double getTotalAmount(){
 		double result = 0;
-		switch(rental.getMovie().getPriceCode()){
-			case Movie.REGULAR :
-				result += 2;
-				if( rental.getDayRent() > 2){
-					result += (rental.getDayRent() - 2) * 1.5;
-				}
-				break;
-			
-			case Movie.NEW :
-				result += rental.getDayRent() * 3;
-				break;
-			
-			case Movie.CHILD :
-				result += 1.5;
-				if( rental.getDayRent() > 3){
-					result += (rental.getDayRent() - 3) * 1.5;
-				}
-				break;
+		for(Rental rental : rentals){
+			result += rental.getMovie().getPrice(rental.getDayRent());
 		}
 		return result;
 	}
 	
-	private int getPoint(Rental rental){
-		int rentalPoints = 1;
-		//최신을 대여시 보너스 추가 지급
-		if(rental.getMovie().getPriceCode() == Movie.NEW && rental.getDayRent() > 1){
-			rentalPoints++;
+	private int getTotalPoint(){
+		int rentalPoints = 0;
+		for(Rental rental : rentals){
+			rentalPoints += rental.getMovie().getPoints(rental.getDayRent());
 		}
 		return rentalPoints;
 	}

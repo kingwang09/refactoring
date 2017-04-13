@@ -1,5 +1,7 @@
 package org.pilot.refact.step01;
 
+import org.pilot.refact.step01.movie.Movie;
+
 import lombok.Getter;
 
 public class Rental {

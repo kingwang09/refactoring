@@ -2,6 +2,10 @@ package org.pilot.refact.step01;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.pilot.refact.step01.movie.ChildrenMovie;
+import org.pilot.refact.step01.movie.Movie;
+import org.pilot.refact.step01.movie.NewReleaseMovie;
+import org.pilot.refact.step01.movie.RegularMovie;
 
 
 public class RefactoringTest {
@@ -10,9 +14,9 @@ public class RefactoringTest {
 	
 	@Before
 	public void before(){
-		Movie movie1 = new Movie("Test1", Movie.NEW);
-		Movie movie2 = new Movie("Test2", Movie.REGULAR);
-		Movie movie3 = new Movie("Test3", Movie.CHILD);
+		Movie movie1 = new NewReleaseMovie("Test1");
+		Movie movie2 = new RegularMovie("Test2");
+		Movie movie3 = new ChildrenMovie("Test3");
 		
 		Rental rental1_1 = new Rental(movie1, 1);
 		Rental rental1_2 = new Rental(movie1, 2);
