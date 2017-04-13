@@ -29,34 +29,10 @@ public class Customer {
 		for(Rental rental : rentals){
 			double amount = 0;
 			
-			//대여로 계산
-			switch(rental.getMovie().getPriceCode()){
-				case Movie.REGULAR :
-					amount += 2;
-					if( rental.getDayRent() > 2){
-						amount += (rental.getDayRent() - 2) * 1.5;
-					}
-					break;
-				
-				case Movie.NEW :
-					amount += rental.getDayRent() * 3;
-					break;
-				
-				case Movie.CHILD :
-					amount += 1.5;
-					if( rental.getDayRent() > 3){
-						amount += (rental.getDayRent() - 3) * 1.5;
-					}
-					break;
-			}
+			amount = getTotalAmount(rental);
 			
 			//적립포인트 1
-			rentalPoints ++;
-			//최신을 대여시 보너스 추가 지급
-			if(rental.getMovie().getPriceCode() == Movie.NEW && rental.getDayRent() > 1){
-				rentalPoints++;
-			}
-			
+			rentalPoints = getPoint(rental);
 			
 			result.append("\t").append(rental.getMovie().getTitle()).append("\t")
 				  .append(amount).append("\n");
@@ -65,5 +41,39 @@ public class Customer {
 		result.append("누적 대여료 : ").append(totalAmount).append("\n")
 			.append("적립 포인트 : ").append(rentalPoints);
 		return result.toString();
+	}
+	
+	//대여로 계산
+	private double getTotalAmount(Rental rental){
+		double result = 0;
+		switch(rental.getMovie().getPriceCode()){
+			case Movie.REGULAR :
+				result += 2;
+				if( rental.getDayRent() > 2){
+					result += (rental.getDayRent() - 2) * 1.5;
+				}
+				break;
+			
+			case Movie.NEW :
+				result += rental.getDayRent() * 3;
+				break;
+			
+			case Movie.CHILD :
+				result += 1.5;
+				if( rental.getDayRent() > 3){
+					result += (rental.getDayRent() - 3) * 1.5;
+				}
+				break;
+		}
+		return result;
+	}
+	
+	private int getPoint(Rental rental){
+		int rentalPoints = 1;
+		//최신을 대여시 보너스 추가 지급
+		if(rental.getMovie().getPriceCode() == Movie.NEW && rental.getDayRent() > 1){
+			rentalPoints++;
+		}
+		return rentalPoints;
 	}
 }
